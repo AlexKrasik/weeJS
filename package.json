@@ -1,0 +1,15 @@
+{
+  "name": "weeJS",
+  "version": "0.1.0",
+  "private": true,
+  "description": "html5 minimalistic game engine",
+  "type": "commonjs",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rollup": "^3.18.0",
+    "tslib": "^2.5.0"
+  }
+}
