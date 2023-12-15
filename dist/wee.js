@@ -14,13 +14,42 @@ class WeeGame {
         const parentEl = document.querySelector(parentSelector) || document.body;
         parentEl.append(canvasEl);
         // start main loop
-        this.update();
+        this.#loop();
     }
-    update() {
+    #loop() {
+        this.#stage?.loop();
         requestAnimationFrame(() => {
-            this.update();
+            this.#loop();
         });
     }
+    /**
+     * Currently active stage
+     */
+    get stage() {
+        return this.#stage;
+    }
+    ;
+    set stage(s) {
+        this.#stage = s;
+    }
+    #stage;
 }
 
-export { WeeGame };
+class WeeStage {
+    constructor() {
+    }
+    get loop() {
+        return this.#loop;
+    }
+    #loop() {
+        this.update();
+        this.#entityList.forEach(e => {
+            e.loop();
+        });
+    }
+    //
+    update() { }
+    #entityList = [];
+}
+
+export { WeeGame, WeeStage };

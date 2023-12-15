@@ -1,3 +1,5 @@
+import {WeeStage} from "./WeeStage";
+
 export class WeeGame {
     /**
      * Set up a new game
@@ -17,12 +19,28 @@ export class WeeGame {
         parentEl.append(canvasEl);
 
         // start main loop
-        this.update();
+        this.#loop();
     }
 
-    update() {
+    #loop() {
+        this.#stage?.loop();
         requestAnimationFrame(() => {
-            this.update();
+            this.#loop();
         });
     }
+
+    /**
+     * Currently active stage
+     */
+    get stage() {
+        return this.#stage;
+    };
+
+    set stage(s: WeeStage) {
+        this.#stage = s;
+    }
+
+    #stage: WeeStage;
+
+
 }
