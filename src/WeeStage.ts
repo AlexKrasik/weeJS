@@ -10,7 +10,7 @@ export class WeeStage {
 
     #loop() {
         this.update();
-        this.#entityList.forEach(e => {
+        this._entityList.forEach(e => {
             e.loop();
         })
     }
@@ -18,5 +18,15 @@ export class WeeStage {
     update() {
     }
 
-    #entityList: WeeEntity[] = [];
+    add(e: WeeEntity) {
+        this._entityList.push(e);
+        return e;
+    }
+
+    remove(e) {
+        this._entityList = this._entityList.filter(c => c != e);
+    }
+
+    private _entityList: WeeEntity[] = [];
+
 }
