@@ -1,3 +1,4 @@
+import {WeeStage} from "./WeeStage";
 import {WeeSprite} from "./WeeSprite";
 
 export class WeeEntity {
@@ -19,5 +20,15 @@ export class WeeEntity {
 
     }
 
-    sprite: WeeSprite;
+    stage: WeeStage;
+    private _sprite: WeeSprite;
+
+    set sprite(s: WeeSprite) {
+        this._sprite = s;
+        this._sprite.entity = this;
+    }
+
+    get sprite() {
+        return this._sprite;
+    }
 }

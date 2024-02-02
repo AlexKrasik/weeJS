@@ -1,14 +1,15 @@
 import {WeeEntity} from "./WeeEntity";
+import {WeeGame} from "./WeeGame";
 
 export class WeeStage {
     constructor() {
     }
 
     get loop() {
-        return this.#loop;
+        return this._loop;
     }
 
-    #loop() {
+    private _loop() {
         this.update();
         this._entityList.forEach(e => {
             e.loop();
@@ -20,6 +21,7 @@ export class WeeStage {
 
     add(e: WeeEntity) {
         this._entityList.push(e);
+        e.stage = this;
         return e;
     }
 
@@ -28,5 +30,6 @@ export class WeeStage {
     }
 
     private _entityList: WeeEntity[] = [];
+    game: WeeGame = null;
 
 }

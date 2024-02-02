@@ -18,7 +18,7 @@ export class WeeGame {
         const parentEl = document.querySelector(parentSelector) || document.body;
         parentEl.append(canvasEl);
 
-        this._ctx = canvasEl.getContext('2d');
+        this.ctx = canvasEl.getContext('2d');
 
         // start main loop
         this.loop(0);
@@ -28,10 +28,10 @@ export class WeeGame {
         this._elapsed = time - this._lastFrameTime;
         this._lastFrameTime = time;
         //clear canvas
-        this._ctx.fillStyle = "#222";
-        this._ctx.fillRect(0, 0, this._width, this._height);
+        this.ctx.fillStyle = "#222";
+        this.ctx.fillRect(0, 0, this._width, this._height);
         // update current stage
-        this._stage?.loop();
+        this.stage?.loop();
         requestAnimationFrame((time) => {
             this.loop(time);
         });
@@ -40,14 +40,19 @@ export class WeeGame {
     /**
      * Currently active stage
      */
-    setStage(s: WeeStage) {
+    set stage(s: WeeStage) {
         this._stage = s;
+        this._stage.game = this;
+    }
+
+    get stage() {
+        return this._stage;
     }
 
     private readonly _width: number;
     private readonly _height: number;
     private _elapsed: number;
-    private _stage: WeeStage = null;
-    private _ctx: CanvasRenderingContext2D = null;
     private _lastFrameTime: number = 0;
+    private _stage: WeeStage = null;
+    ctx: CanvasRenderingContext2D = null;
 }
