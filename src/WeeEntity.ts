@@ -19,5 +19,5 @@ export class WeeEntity {
 
     }
 
-    sprite: WeeSprite
+    sprite: WeeSprite;
 }

@@ -35,14 +35,11 @@ export class WeeGame {
         requestAnimationFrame((time) => {
             this.loop(time);
         });
-
-        console.log(this._elapsed)
     }
 
     /**
      * Currently active stage
      */
-
     setStage(s: WeeStage) {
         this._stage = s;
     }
