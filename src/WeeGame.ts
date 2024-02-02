@@ -49,6 +49,10 @@ export class WeeGame {
         return this._stage;
     }
 
+    get elapsed() {
+        return this._elapsed;
+    }
+
     private readonly _width: number;
     private readonly _height: number;
     private _elapsed: number;

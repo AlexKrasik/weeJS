@@ -52,28 +52,39 @@ export class WeeSprite {
     }
 
     private _render() {
+        this._updateFrame();
+
         const ctx = this.entity.stage.game.ctx;
         if (this._fC)
             ctx?.drawImage(this._fC, 0, 0);
     }
 
-    entity: WeeEntity = null;
-    private _bitmap: ImageBitmap;
-    // array of frames bitmap
-    private _fA: ImageBitmap[] = [];
-    //frame width
-    private readonly _fW: number;
-    //frame height
-    private readonly _fH: number;
+    /**
+     * Play animation sequence
+     * @param {number[]} animation sequence of frames
+     * @param {number} speed sequence of frames
+     */
+    play(animation = [0], speed = 1) {
+        this._aC = animation;
+        this._aT = performance.now();
+        this._aS = speed;
+        this._aI = 0;
+    }
 
-    // current frames bitmap of animation
-    private _fC: ImageBitmap
+    private _updateFrame() {
+        const time = performance.now() - this._aT;
+        if (time > 100 / this._aS) {
+            this._aT = performance.now();
+            this._aI = this._aI >= this._aC.length - 1 ? 0 : this._aI + 1;
+        }
+        this._fC = this._fA[this._aC[this._aI]];
+    }
 
 
     static _assets: ImageBitmap[] = [];
 
     /**
-     * Load a list of game assets. graphics, sounds, etc...
+     * Preload a list of images
      * @param {string[]} list of path's to source images
      * @param {function} [callback] function for all list
      * @param {function} [step] callback function for every asset
@@ -83,8 +94,7 @@ export class WeeSprite {
             const loadList = list.map(path => {
                 return this.loadImage(path, step);
             });
-            const result = await Promise.allSettled(loadList);
-            return result
+            return await Promise.allSettled(loadList);
         } catch (e) {
             return Promise.reject(`Some assets failed to load`);
         } finally {
@@ -93,7 +103,7 @@ export class WeeSprite {
     }
 
     /**
-     * Load a list of game assets. graphics, sounds, etc...
+     * Preload a single image
      * @param {string} path path to source image
      * @param {function} [callback] function called after loading is finished (or failed)
      */
@@ -113,9 +123,33 @@ export class WeeSprite {
         }
     }
 
+    /**
+     * Load a list of game assets. graphics, sounds, etc...
+     * @param {string} path path to source image
+     */
     static getAsset(path: string) {
         return this._assets[path];
     }
 
+    // entity this sprite assigned to
+    entity: WeeEntity = null;
+    // bitmapData of sprite
+    private _bitmap: ImageBitmap;
+    // array of frames bitmap
+    private _fA: ImageBitmap[] = [];
+    // sequence of current animation
+    private _aC: number[] = [0]
+    // current animation speed
+    private _aS: number = 1;
+    // current frame index in current animation sequence
+    private _aI: number = 0;
+    // time from last frame change
+    private _aT: number = 0;
+    //frame width
+    private readonly _fW: number;
+    //frame height
+    private readonly _fH: number;
+    // current frames bitmap of animation
+    private _fC: ImageBitmap
 
 }
