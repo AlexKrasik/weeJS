@@ -21,13 +21,11 @@ class WeeGame {
         this._elapsed = time - this._lastFrameTime;
         this._lastFrameTime = time;
         //clear canvas
-        this.ctx.fillStyle = "#222";
+        this.ctx.fillStyle = "#111";
         this.ctx.fillRect(0, 0, this._width, this._height);
         // update current stage
         this.stage?.loop();
-        requestAnimationFrame((time) => {
-            this.loop(time);
-        });
+        requestAnimationFrame((time) => this.loop(time));
     }
     /**
      * Currently active stage
@@ -114,6 +112,12 @@ class WeeEntity {
     get sprite() {
         return this._sprite;
     }
+    /**
+     * Check for collision with entity from group
+     * @param {string} group collision group
+     * @param {number} offsetX X offset of entity hitbox. Use to predict collision
+     * @param {number} offsetY Y offset of entity hitbox. Use to predict collision
+     */
     collide(group, offsetX = 0, offsetY = 0) {
         const result = [];
         this.stage.entityList.forEach(e => {
@@ -124,6 +128,12 @@ class WeeEntity {
         });
         return result;
     }
+    /**
+     * Check for collision with specific entity
+     * @param {WeeEntity} e entity to check collision with
+     * @param {number} offsetX X offset of entity hitbox. Use to predict collision
+     * @param {number} offsetY Y offset of entity hitbox. Use to predict collision
+     */
     collideWith(e, offsetX = 0, offsetY = 0) {
         const l1 = this.x + this.originX + offsetX;
         const r1 = this.x + this.originX + offsetX + this.width;
@@ -352,4 +362,57 @@ class WeeSprite {
     fillHeight;
 }
 
-export { WeeEntity, WeeGame, WeeSprite, WeeStage };
+class WeeInput {
+    static _keys = [];
+    static init() {
+        addEventListener('keydown', e => {
+            if (!this._keys[e.code])
+                this._defineKey(e.code);
+            if (!this._keys[e.code].down) {
+                console.log('PRESSED_________');
+                this._keys[e.code].pressed = true;
+            }
+            this._keys[e.code].down = true;
+            this._keys[e.code].released = false;
+        });
+        addEventListener('keyup', e => {
+            if (!this._keys[e.code])
+                this._defineKey(e.code);
+            if (this._keys[e.code].down) {
+                console.log('RELEASE_________');
+                this._keys[e.code].released = true;
+            }
+            this._keys[e.code].down = false;
+            this._keys[e.code].pressed = false;
+        });
+        this._loop();
+    }
+    static _loop() {
+        for (const code in this._keys) {
+            this._keys[code].pressed = this._keys[code].released = false;
+        }
+        requestAnimationFrame(() => this._loop());
+    }
+    static _defineKey(code) {
+        this._keys[code] = {
+            pressed: false, down: false, released: false,
+        };
+    }
+    static pressed(code) {
+        if (!this._keys[code])
+            this._defineKey(code);
+        return this._keys[code].pressed;
+    }
+    static down(code) {
+        if (!this._keys[code])
+            this._defineKey(code);
+        return this._keys[code].down;
+    }
+    static released(code) {
+        if (!this._keys[code])
+            this._defineKey(code);
+        return this._keys[code].released;
+    }
+}
+
+export { WeeEntity, WeeGame, WeeInput, WeeSprite, WeeStage };

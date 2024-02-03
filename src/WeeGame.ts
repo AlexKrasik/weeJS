@@ -28,13 +28,11 @@ export class WeeGame {
         this._elapsed = time - this._lastFrameTime;
         this._lastFrameTime = time;
         //clear canvas
-        this.ctx.fillStyle = "#222";
+        this.ctx.fillStyle = "#111";
         this.ctx.fillRect(0, 0, this._width, this._height);
         // update current stage
         this.stage?.loop();
-        requestAnimationFrame((time) => {
-            this.loop(time);
-        });
+        requestAnimationFrame((time) => this.loop(time));
     }
 
     /**
