@@ -29,7 +29,6 @@ class WeeGame {
             this.loop(time);
         });
     }
-
     /**
      * Currently active stage
      */
@@ -37,15 +36,12 @@ class WeeGame {
         this._stage = s;
         this._stage.game = this;
     }
-
     get stage() {
         return this._stage;
     }
-
     get elapsed() {
         return this._elapsed;
     }
-
     _width;
     _height;
     _elapsed;
@@ -57,18 +53,15 @@ class WeeGame {
 class WeeStage {
     constructor() {
     }
-
     get loop() {
         return this._loop;
     }
-
     _loop() {
         this.update();
         this._entityList.forEach(e => {
             e.loop();
         });
     }
-
     update() {
     }
     add(e) {
@@ -79,7 +72,6 @@ class WeeStage {
     remove(e) {
         this._entityList = this._entityList.filter(c => c != e);
     }
-
     _entityList = [];
     game = null;
 }
@@ -87,26 +79,21 @@ class WeeStage {
 class WeeEntity {
     constructor(x = 0, y = 0) {
     }
-
     get loop() {
         return this._loop;
     }
-
     _loop() {
         this.update();
         this.sprite?.render();
     }
-
     update() {
     }
-
     stage;
     _sprite;
     set sprite(s) {
         this._sprite = s;
         this._sprite.entity = this;
     }
-
     get sprite() {
         return this._sprite;
     }
@@ -134,7 +121,6 @@ class WeeSprite {
             this._cacheFrames();
         });
     }
-
     async _cacheFrames() {
         const rCount = (this._bitmap.height - (this._bitmap.height % this._fH)) / this._fH;
         const cCount = (this._bitmap.width - (this._bitmap.width % this._fW)) / this._fW;
@@ -147,18 +133,15 @@ class WeeSprite {
         }
         this._fC = this._fA[0];
     }
-
     get render() {
         return this._render;
     }
-
     _render() {
         this._updateFrame();
         const ctx = this.entity.stage.game.ctx;
         if (this._fC)
             ctx?.drawImage(this._fC, 0, 0);
     }
-
     /**
      * Play animation sequence
      * @param {number[]} animation sequence of frames
@@ -170,18 +153,15 @@ class WeeSprite {
         this._aS = speed;
         this._aI = 0;
     }
-
     _updateFrame() {
         const time = performance.now() - this._aT;
-        if (time > 100 / this._aS) {
+        if (time > 1000 / this._aS) {
             this._aT = performance.now();
             this._aI = this._aI >= this._aC.length - 1 ? 0 : this._aI + 1;
         }
         this._fC = this._fA[this._aC[this._aI]];
     }
-
     static _assets = [];
-
     /**
      * Preload a list of images
      * @param {string[]} list of path's to source images
@@ -200,7 +180,6 @@ class WeeSprite {
             callback();
         }
     }
-
     /**
      * Preload a single image
      * @param {string} path path to source image
@@ -221,7 +200,6 @@ class WeeSprite {
             callback(result);
         }
     }
-
     /**
      * Load a list of game assets. graphics, sounds, etc...
      * @param {string} path path to source image
@@ -229,7 +207,6 @@ class WeeSprite {
     static getAsset(path) {
         return this._assets[path];
     }
-
     // entity this sprite assigned to
     entity = null;
     // bitmapData of sprite

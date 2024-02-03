@@ -73,7 +73,7 @@ export class WeeSprite {
 
     private _updateFrame() {
         const time = performance.now() - this._aT;
-        if (time > 100 / this._aS) {
+        if (time > 1000 / this._aS) {
             this._aT = performance.now();
             this._aI = this._aI >= this._aC.length - 1 ? 0 : this._aI + 1;
         }
