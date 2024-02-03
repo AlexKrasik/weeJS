@@ -59,7 +59,7 @@ export class WeeSprite {
             ctx.translate(rX, rY);
 
             if (this.rotation != 0) ctx.rotate((this.rotation * Math.PI) / 180);
-
+            if (this.alpha != 1) ctx.globalAlpha = this.alpha;
             // render or fill area with frame
             if (this.fillWidth == this._fW && this.fillHeight == this._fH) {
                 ctx.drawImage(this?._fB, this.pivotX, this.pivotY);
@@ -188,6 +188,10 @@ export class WeeSprite {
      * Image rotation;
      */
     rotation: number = 0;
+    /**
+     * Sprite transparency
+     */
+    alpha: number = 1;
     /**
      * Width of rectangle to be filled with texture
      */
