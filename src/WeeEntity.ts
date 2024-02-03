@@ -42,6 +42,19 @@ export class WeeEntity {
      */
     y: number = 0;
     /**
-     * Width of rectangle to be filled with texture
+     * hitbox X position
      */
+    originX: number = 0;
+    /**
+     * hitbox Y position
+     */
+    originY: number = 0;
+    /**
+     * Entity hitbox width
+     */
+    width: number = 0;
+    /**
+     * Entity hitbox height
+     */
+    height: number = 0;
 }

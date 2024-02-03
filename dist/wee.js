@@ -48,6 +48,7 @@ class WeeGame {
     _lastFrameTime = 0;
     _stage = null;
     ctx = null;
+    debug = false;
 }
 
 class WeeStage {
@@ -61,6 +62,18 @@ class WeeStage {
         this._entityList.forEach(e => {
             e.loop();
         });
+        if (this.game.debug) {
+            const ctx = this.game.ctx;
+            this._entityList.forEach(e => {
+                //entity hitbox
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(Math.floor(e.x) + .5 + e.originX, Math.floor(e.y) + .5 + e.originY, e.width, e.height);
+                // entity position
+                ctx.strokeStyle = "#00DDFF";
+                ctx.strokeRect(Math.floor(e.x) - .5, Math.floor(e.y) - .5, 2, 2);
+            });
+        }
     }
     update() {
     }
@@ -107,6 +120,22 @@ class WeeEntity {
      * Y position
      */
     y = 0;
+    /**
+     * hitbox X position
+     */
+    originX = 0;
+    /**
+     * hitbox Y position
+     */
+    originY = 0;
+    /**
+     * Entity hitbox width
+     */
+    width = 0;
+    /**
+     * Entity hitbox height
+     */
+    height = 0;
 }
 
 class WeeSprite {
@@ -157,10 +186,13 @@ class WeeSprite {
             ctx.translate(rX, rY);
             if (this.rotation != 0)
                 ctx.rotate((this.rotation * Math.PI) / 180);
+            if (this.alpha != 1)
+                ctx.globalAlpha = this.alpha;
             // render or fill area with frame
             if (this.fillWidth == this._fW && this.fillHeight == this._fH) {
                 ctx.drawImage(this?._fB, this.pivotX, this.pivotY);
-            } else {
+            }
+            else {
                 ctx.fillStyle = ctx.createPattern(this._fB, 'repeat');
                 ctx.fillRect(this.pivotX, this.pivotY, this.fillWidth, this.fillHeight);
             }
@@ -201,9 +233,11 @@ class WeeSprite {
             this._assets[path] = bitmap;
             result = true;
             return Promise.resolve(bitmap);
-        } catch (e) {
+        }
+        catch (e) {
             return Promise.reject(`Failed to load image from ${path} \n\t ${e}`);
-        } finally {
+        }
+        finally {
             callback(result);
         }
     }
@@ -219,9 +253,11 @@ class WeeSprite {
                 return this.loadImage(path, step);
             });
             return await Promise.allSettled(loadList);
-        } catch (e) {
+        }
+        catch (e) {
             return Promise.reject(`Some assets failed to load`);
-        } finally {
+        }
+        finally {
             callback();
         }
     }
@@ -275,6 +311,10 @@ class WeeSprite {
      */
     rotation = 0;
     /**
+     * Sprite transparency
+     */
+    alpha = 1;
+    /**
      * Width of rectangle to be filled with texture
      */
     fillWidth;
@@ -284,4 +324,4 @@ class WeeSprite {
     fillHeight;
 }
 
-export {WeeEntity, WeeGame, WeeSprite, WeeStage};
+export { WeeEntity, WeeGame, WeeSprite, WeeStage };

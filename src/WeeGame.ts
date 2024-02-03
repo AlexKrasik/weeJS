@@ -59,4 +59,5 @@ export class WeeGame {
     private _lastFrameTime: number = 0;
     private _stage: WeeStage = null;
     ctx: CanvasRenderingContext2D = null;
+    debug: boolean = false;
 }

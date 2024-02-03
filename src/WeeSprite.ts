@@ -163,9 +163,6 @@ export class WeeSprite {
     private readonly _fH: number;
     // bitmap of current frame in animation sequence
     private _fB: ImageBitmap;
-    // render points
-    private _rX: number;
-    private _rY: number;
 
 
     /**
