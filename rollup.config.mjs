@@ -7,6 +7,6 @@ export default {
         format: 'es'
     },
     plugins: [
-        ts({ compilerOptions: { lib: ["DOM", "ES2017"], target: "esnext", module: "ES6" } })
+        ts({compilerOptions: {lib: ["DOM", "ES2020"], target: "esnext", module: "ES6"}})
     ]
 };
