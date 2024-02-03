@@ -90,18 +90,15 @@ class WeeEntity {
     }
     update() {
     }
-
     stage;
     _sprite;
     set sprite(s) {
         this._sprite = s;
         this._sprite.entity = this;
     }
-
     get sprite() {
         return this._sprite;
     }
-
     /**
      * X position
      */
@@ -125,10 +122,10 @@ class WeeSprite {
      */
     constructor(asset, width, height, x = 0, y = 0, cropWidth, cropHeight) {
         const srcBitmap = WeeSprite.getAsset(asset);
-        cropWidth = this.fillWidth = cropWidth || srcBitmap.width - x;
-        cropHeight = this.fillHeight = cropHeight || srcBitmap.height - y;
-        this._fW = width < cropWidth ? width || cropWidth : cropWidth;
-        this._fH = height < cropHeight ? height || cropHeight : cropHeight;
+        cropWidth = cropWidth || srcBitmap.width - x;
+        cropHeight = cropHeight || srcBitmap.height - y;
+        this._fW = this.fillWidth = width < cropWidth ? width || cropWidth : cropWidth;
+        this._fH = this.fillHeight = height < cropHeight ? height || cropHeight : cropHeight;
         createImageBitmap(srcBitmap, x, y, cropWidth, cropHeight).then((clippedBitmap) => {
             this._bitmap = clippedBitmap;
             this._cacheFrames();
@@ -210,7 +207,6 @@ class WeeSprite {
             callback(result);
         }
     }
-
     /**
      * Preload a list of images
      * @param {string[]} list of path's to source images
@@ -229,7 +225,6 @@ class WeeSprite {
             callback();
         }
     }
-
     /**
      * Returns ImageBitmap of loaded asset
      * @param {string} path path to source image
@@ -237,7 +232,6 @@ class WeeSprite {
     static getAsset(path) {
         return this._assets[path];
     }
-
     // entity this sprite assigned to
     entity = null;
     // bitmapData of sprite
@@ -269,15 +263,15 @@ class WeeSprite {
      */
     y = 0;
     /**
-     * x position of transformation pivot point
+     * X position of transformation pivot point
      */
     pivotX = 0;
     /**
-     * y position of transformation pivot point
+     * Y position of transformation pivot point
      */
     pivotY = 0;
     /**
-     *  image rotation;
+     * Image rotation;
      */
     rotation = 0;
     /**

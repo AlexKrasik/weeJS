@@ -14,11 +14,11 @@ export class WeeSprite {
     constructor(asset: string, width: number, height: number, x: number = 0, y: number = 0, cropWidth, cropHeight) {
         const srcBitmap = WeeSprite.getAsset(asset);
 
-        cropWidth = this.fillWidth = cropWidth || srcBitmap.width - x;
-        cropHeight = this.fillHeight = cropHeight || srcBitmap.height - y;
+        cropWidth = cropWidth || srcBitmap.width - x;
+        cropHeight = cropHeight || srcBitmap.height - y;
 
-        this._fW = width < cropWidth ? width || cropWidth : cropWidth;
-        this._fH = height < cropHeight ? height || cropHeight : cropHeight;
+        this._fW = this.fillWidth = width < cropWidth ? width || cropWidth : cropWidth;
+        this._fH = this.fillHeight = height < cropHeight ? height || cropHeight : cropHeight;
 
 
         createImageBitmap(srcBitmap, x, y, cropWidth, cropHeight).then((clippedBitmap) => {
@@ -177,15 +177,15 @@ export class WeeSprite {
      */
     y: number = 0;
     /**
-     * x position of transformation pivot point
+     * X position of transformation pivot point
      */
     pivotX: number = 0;
     /**
-     * y position of transformation pivot point
+     * Y position of transformation pivot point
      */
     pivotY: number = 0;
     /**
-     *  image rotation;
+     * Image rotation;
      */
     rotation: number = 0;
     /**
