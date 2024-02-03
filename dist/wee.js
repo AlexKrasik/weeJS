@@ -86,6 +86,9 @@ class WeeStage {
         this._entityList = this._entityList.filter(c => c != e);
     }
     _entityList = [];
+    get entityList() {
+        return this._entityList;
+    }
     game = null;
 }
 
@@ -103,7 +106,6 @@ class WeeEntity {
     }
     update() {
     }
-    stage;
     _sprite;
     set sprite(s) {
         this._sprite = s;
@@ -111,6 +113,27 @@ class WeeEntity {
     }
     get sprite() {
         return this._sprite;
+    }
+    collide(group, offsetX = 0, offsetY = 0) {
+        const result = [];
+        this.stage.entityList.forEach(e => {
+            if (e != this && e.group == group) {
+                if (this.collideWith(e, offsetX, offsetY))
+                    result.push(e);
+            }
+        });
+        return result;
+    }
+    collideWith(e, offsetX = 0, offsetY = 0) {
+        const l1 = this.x + this.originX + offsetX;
+        const r1 = this.x + this.originX + offsetX + this.width;
+        const t1 = this.y + this.originY + offsetY;
+        const b1 = this.y + this.originY + offsetY + this.height;
+        const l2 = e.x + e.originX;
+        const r2 = e.x + e.originX + e.width;
+        const t2 = e.y + e.originY;
+        const b2 = e.y + e.originY + e.height;
+        return (l1 <= r2 && l2 <= r1 && t1 <= b2 && t2 <= b1);
     }
     /**
      * X position
@@ -136,6 +159,14 @@ class WeeEntity {
      * Entity hitbox height
      */
     height = 0;
+    /**
+     * Entity hitbox collision group
+     */
+    group = '';
+    /**
+     *  Stage this entity belongs to
+     */
+    stage;
 }
 
 class WeeSprite {
@@ -287,9 +318,6 @@ class WeeSprite {
     _fH;
     // bitmap of current frame in animation sequence
     _fB;
-    // render points
-    _rX;
-    _rY;
     /**
      * X position
      */

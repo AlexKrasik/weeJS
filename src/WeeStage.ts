@@ -42,6 +42,11 @@ export class WeeStage {
     }
 
     private _entityList: WeeEntity[] = [];
+
+    get entityList() {
+        return this._entityList;
+    }
+
     game: WeeGame = null;
 
 }
