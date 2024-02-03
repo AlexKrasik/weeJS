@@ -78,25 +78,38 @@ class WeeStage {
 
 class WeeEntity {
     constructor(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
     }
     get loop() {
         return this._loop;
     }
     _loop() {
-        this.update();
         this.sprite?.render();
+        this.update();
     }
     update() {
     }
+
     stage;
     _sprite;
     set sprite(s) {
         this._sprite = s;
         this._sprite.entity = this;
     }
+
     get sprite() {
         return this._sprite;
     }
+
+    /**
+     * X position
+     */
+    x = 0;
+    /**
+     * Y position
+     */
+    y = 0;
 }
 
 class WeeSprite {
@@ -112,8 +125,8 @@ class WeeSprite {
      */
     constructor(asset, width, height, x = 0, y = 0, cropWidth, cropHeight) {
         const srcBitmap = WeeSprite.getAsset(asset);
-        cropWidth = cropWidth || srcBitmap.width - x;
-        cropHeight = cropHeight || srcBitmap.height - y;
+        cropWidth = this.fillWidth = cropWidth || srcBitmap.width - x;
+        cropHeight = this.fillHeight = cropHeight || srcBitmap.height - y;
         this._fW = width < cropWidth ? width || cropWidth : cropWidth;
         this._fH = height < cropHeight ? height || cropHeight : cropHeight;
         createImageBitmap(srcBitmap, x, y, cropWidth, cropHeight).then((clippedBitmap) => {
@@ -131,7 +144,7 @@ class WeeSprite {
                 frameCount++;
             }
         }
-        this._fC = this._fA[0];
+        this._fB = this._fA[0];
     }
     get render() {
         return this._render;
@@ -139,8 +152,23 @@ class WeeSprite {
     _render() {
         this._updateFrame();
         const ctx = this.entity.stage.game.ctx;
-        if (this._fC)
-            ctx?.drawImage(this._fC, 0, 0);
+        ctx.save();
+        if (this._fB) {
+            // renderPont
+            const rX = this.entity.x + this.x - this.pivotX;
+            const rY = this.entity.y + this.y - this.pivotY;
+            ctx.translate(rX, rY);
+            if (this.rotation != 0)
+                ctx.rotate((this.rotation * Math.PI) / 180);
+            // render or fill area with frame
+            if (this.fillWidth == this._fW && this.fillHeight == this._fH) {
+                ctx.drawImage(this?._fB, this.pivotX, this.pivotY);
+            } else {
+                ctx.fillStyle = ctx.createPattern(this._fB, 'repeat');
+                ctx.fillRect(this.pivotX, this.pivotY, this.fillWidth, this.fillHeight);
+            }
+        }
+        ctx.restore();
     }
     /**
      * Play animation sequence
@@ -159,27 +187,9 @@ class WeeSprite {
             this._aT = performance.now();
             this._aI = this._aI >= this._aC.length - 1 ? 0 : this._aI + 1;
         }
-        this._fC = this._fA[this._aC[this._aI]];
+        this._fB = this._fA[this._aC[this._aI]];
     }
     static _assets = [];
-    /**
-     * Preload a list of images
-     * @param {string[]} list of path's to source images
-     * @param {function} [callback] function for all list
-     * @param {function} [step] callback function for every asset
-     */
-    static async loadImageList(list, callback, step) {
-        try {
-            const loadList = list.map(path => {
-                return this.loadImage(path, step);
-            });
-            return await Promise.allSettled(loadList);
-        } catch (e) {
-            return Promise.reject(`Some assets failed to load`);
-        } finally {
-            callback();
-        }
-    }
     /**
      * Preload a single image
      * @param {string} path path to source image
@@ -200,13 +210,34 @@ class WeeSprite {
             callback(result);
         }
     }
+
     /**
-     * Load a list of game assets. graphics, sounds, etc...
+     * Preload a list of images
+     * @param {string[]} list of path's to source images
+     * @param {function} [callback] function for all list
+     * @param {function} [step] callback function for every asset
+     */
+    static async loadImageList(list, callback, step) {
+        try {
+            const loadList = list.map(path => {
+                return this.loadImage(path, step);
+            });
+            return await Promise.allSettled(loadList);
+        } catch (e) {
+            return Promise.reject(`Some assets failed to load`);
+        } finally {
+            callback();
+        }
+    }
+
+    /**
+     * Returns ImageBitmap of loaded asset
      * @param {string} path path to source image
      */
     static getAsset(path) {
         return this._assets[path];
     }
+
     // entity this sprite assigned to
     entity = null;
     // bitmapData of sprite
@@ -217,16 +248,46 @@ class WeeSprite {
     _aC = [0];
     // current animation speed
     _aS = 1;
-    // current frame index in current animation sequence
+    // current frame index in animation sequence
     _aI = 0;
     // time from last frame change
     _aT = 0;
-    //frame width
+    //frame width/height
     _fW;
-    //frame height
     _fH;
-    // current frames bitmap of animation
-    _fC;
+    // bitmap of current frame in animation sequence
+    _fB;
+    // render points
+    _rX;
+    _rY;
+    /**
+     * X position
+     */
+    x = 0;
+    /**
+     * Y position
+     */
+    y = 0;
+    /**
+     * x position of transformation pivot point
+     */
+    pivotX = 0;
+    /**
+     * y position of transformation pivot point
+     */
+    pivotY = 0;
+    /**
+     *  image rotation;
+     */
+    rotation = 0;
+    /**
+     * Width of rectangle to be filled with texture
+     */
+    fillWidth;
+    /**
+     * Height of rectangle to be filled with texture
+     */
+    fillHeight;
 }
 
 export {WeeEntity, WeeGame, WeeSprite, WeeStage};

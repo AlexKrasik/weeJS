@@ -4,7 +4,8 @@ import {WeeSprite} from "./WeeSprite";
 export class WeeEntity {
 
     constructor(x: number = 0, y: number = 0) {
-
+        this.x = x;
+        this.y = y;
     }
 
     get loop() {
@@ -12,8 +13,8 @@ export class WeeEntity {
     }
 
     private _loop() {
-        this.update();
         this.sprite?.render();
+        this.update();
     }
 
     update() {
@@ -31,4 +32,16 @@ export class WeeEntity {
     get sprite() {
         return this._sprite;
     }
+
+    /**
+     * X position
+     */
+    x: number = 0;
+    /**
+     * Y position
+     */
+    y: number = 0;
+    /**
+     * Width of rectangle to be filled with texture
+     */
 }
