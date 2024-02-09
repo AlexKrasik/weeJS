@@ -11,6 +11,9 @@ export class WeeStage {
 
     private _loop() {
         this.update();
+        if (this._needReorded) {
+            this._entityList = this._entityList.sort((a, b) => (a.z > b.z) ? 1 : -1);
+        }
         this._entityList.forEach(e => {
             e.loop();
         });
@@ -48,5 +51,11 @@ export class WeeStage {
     }
 
     game: WeeGame = null;
+
+    private _needReorded: boolean = false;
+
+    reorderZ() {
+        this._needReorded = true;
+    }
 
 }

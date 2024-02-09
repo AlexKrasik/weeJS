@@ -57,6 +57,9 @@ class WeeStage {
     }
     _loop() {
         this.update();
+        if (this._zOrder) {
+            this._entityList = this._entityList.sort((a, b) => (a.z < b.z) ? 1 : -1);
+        }
         this._entityList.forEach(e => {
             e.loop();
         });
@@ -88,6 +91,10 @@ class WeeStage {
         return this._entityList;
     }
     game = null;
+    _zOrder = false;
+    reorderZ() {
+        this._zOrder = true;
+    }
 }
 
 class WeeEntity {
@@ -153,6 +160,17 @@ class WeeEntity {
      * Y position
      */
     y = 0;
+    /**
+     * Z position, defines order in which entities be rendered
+     */
+    set z(value) {
+        this._z = value;
+        this.stage?.reorderZ();
+    }
+    get z() {
+        return this._z;
+    }
+    _z = 0;
     /**
      * hitbox X position
      */
@@ -368,30 +386,25 @@ class WeeInput {
         addEventListener('keydown', e => {
             if (!this._keys[e.code])
                 this._defineKey(e.code);
-            if (!this._keys[e.code].down) {
-                console.log('PRESSED_________');
+            if (!this._keys[e.code].down)
                 this._keys[e.code].pressed = true;
-            }
             this._keys[e.code].down = true;
             this._keys[e.code].released = false;
         });
         addEventListener('keyup', e => {
             if (!this._keys[e.code])
                 this._defineKey(e.code);
-            if (this._keys[e.code].down) {
-                console.log('RELEASE_________');
+            if (this._keys[e.code].down)
                 this._keys[e.code].released = true;
-            }
             this._keys[e.code].down = false;
             this._keys[e.code].pressed = false;
         });
-        this._loop();
+        this._clear();
     }
-    static _loop() {
-        for (const code in this._keys) {
+    static _clear() {
+        for (const code in this._keys)
             this._keys[code].pressed = this._keys[code].released = false;
-        }
-        requestAnimationFrame(() => this._loop());
+        requestAnimationFrame(() => this._clear());
     }
     static _defineKey(code) {
         this._keys[code] = {

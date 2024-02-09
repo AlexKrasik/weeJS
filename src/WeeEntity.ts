@@ -77,6 +77,21 @@ export class WeeEntity {
      * Y position
      */
     y: number = 0;
+
+    /**
+     * Z position, defines order in which entities be rendered (lowest first)
+     */
+    set z(value) {
+        this._z = value;
+        this.stage?.reorderZ();
+    }
+
+    get z() {
+        return this._z;
+    }
+
+    _z: number = 0;
+
     /**
      * hitbox X position
      */
