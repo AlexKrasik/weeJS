@@ -14,12 +14,10 @@ export class WeeInput {
             this._keys[e.code].down = false;
             this._keys[e.code].pressed = false;
         });
-        this._clear();
     }
 
     static _clear() {
         for (const code in this._keys) this._keys[code].pressed = this._keys[code].released = false;
-        requestAnimationFrame(() => this._clear());
     }
 
     private static _defineKey(code) {

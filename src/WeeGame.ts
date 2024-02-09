@@ -1,4 +1,5 @@
 import {WeeStage} from "./WeeStage";
+import {WeeInput} from "./Wee";
 
 export class WeeGame {
     /**
@@ -8,6 +9,7 @@ export class WeeGame {
      * @param {string} parentSelector - Where game canvas is will be placed in DOM.
      */
     constructor(width: number = 320, height: number = 480, parentSelector: string) {
+        WeeInput.init();
 
         // create canvas element
         const canvasEl: HTMLCanvasElement = document.createElement("canvas");
@@ -27,11 +29,16 @@ export class WeeGame {
     private loop(time) {
         this._elapsed = time - this._lastFrameTime;
         this._lastFrameTime = time;
+
         //clear canvas
         this.ctx.fillStyle = "#111";
         this.ctx.fillRect(0, 0, this._width, this._height);
+
         // update current stage
         this.stage?.loop();
+
+        // clear inputs data
+        WeeInput._clear();
         requestAnimationFrame((time) => this.loop(time));
     }
 

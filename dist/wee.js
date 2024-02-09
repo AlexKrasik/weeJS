@@ -14,6 +14,8 @@ class WeeGame {
         const parentEl = document.querySelector(parentSelector) || document.body;
         parentEl.append(canvasEl);
         this.ctx = canvasEl.getContext('2d');
+        // WeeInput init
+        WeeInput.init();
         // start main loop
         this.loop(0);
     }
@@ -25,6 +27,8 @@ class WeeGame {
         this.ctx.fillRect(0, 0, this._width, this._height);
         // update current stage
         this.stage?.loop();
+        // clear inputs data
+        WeeInput._clear();
         requestAnimationFrame((time) => this.loop(time));
     }
     /**
@@ -57,8 +61,8 @@ class WeeStage {
     }
     _loop() {
         this.update();
-        if (this._zOrder) {
-            this._entityList = this._entityList.sort((a, b) => (a.z < b.z) ? 1 : -1);
+        if (this._needReorded) {
+            this._entityList = this._entityList.sort((a, b) => (a.z > b.z) ? 1 : -1);
         }
         this._entityList.forEach(e => {
             e.loop();
@@ -91,9 +95,9 @@ class WeeStage {
         return this._entityList;
     }
     game = null;
-    _zOrder = false;
+    _needReorded = false;
     reorderZ() {
-        this._zOrder = true;
+        this._needReorded = true;
     }
 }
 
@@ -161,7 +165,7 @@ class WeeEntity {
      */
     y = 0;
     /**
-     * Z position, defines order in which entities be rendered
+     * Z position, defines order in which entities be rendered (lowest first)
      */
     set z(value) {
         this._z = value;
@@ -399,12 +403,10 @@ class WeeInput {
             this._keys[e.code].down = false;
             this._keys[e.code].pressed = false;
         });
-        this._clear();
     }
     static _clear() {
         for (const code in this._keys)
             this._keys[code].pressed = this._keys[code].released = false;
-        requestAnimationFrame(() => this._clear());
     }
     static _defineKey(code) {
         this._keys[code] = {
