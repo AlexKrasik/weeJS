@@ -6,6 +6,7 @@ class WeeGame {
      * @param {string} parentSelector - Where game canvas is will be placed in DOM.
      */
     constructor(width = 320, height = 480, parentSelector) {
+        WeeInput.init();
         // create canvas element
         const canvasEl = document.createElement("canvas");
         canvasEl.width = this._width = width;
@@ -14,8 +15,6 @@ class WeeGame {
         const parentEl = document.querySelector(parentSelector) || document.body;
         parentEl.append(canvasEl);
         this.ctx = canvasEl.getContext('2d');
-        // WeeInput init
-        WeeInput.init();
         // start main loop
         this.loop(0);
     }
@@ -265,13 +264,16 @@ class WeeSprite {
     /**
      * Play animation sequence
      * @param {number[]} animation sequence of frames
-     * @param {number} speed sequence of frames
+     * @param {number} speed animation speed (frames per second)
+     * @param {boolean} force should animation start over if already playing
      */
-    play(animation = [0], speed = 1) {
-        this._aC = animation;
-        this._aT = performance.now();
-        this._aS = speed;
-        this._aI = 0;
+    play(animation = [0], speed = 1, force = false) {
+        if (animation != this._aC || force) {
+            this._aC = animation;
+            this._aT = performance.now();
+            this._aS = speed;
+            this._aI = 0;
+        }
     }
     _updateFrame() {
         const time = performance.now() - this._aT;

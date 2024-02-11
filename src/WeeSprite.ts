@@ -75,13 +75,16 @@ export class WeeSprite {
     /**
      * Play animation sequence
      * @param {number[]} animation sequence of frames
-     * @param {number} speed sequence of frames
+     * @param {number} speed animation speed (frames per second)
+     * @param {boolean} force should animation start over if already playing
      */
-    play(animation = [0], speed = 1) {
-        this._aC = animation;
-        this._aT = performance.now();
-        this._aS = speed;
-        this._aI = 0;
+    play(animation = [0], speed = 1, force = false) {
+        if (animation != this._aC || force) {
+            this._aC = animation;
+            this._aT = performance.now();
+            this._aS = speed;
+            this._aI = 0;
+        }
     }
 
     private _updateFrame() {
