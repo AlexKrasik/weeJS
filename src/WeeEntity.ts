@@ -12,12 +12,12 @@ export class WeeEntity {
         return this._loop;
     }
 
-    private _loop() {
+    private _loop(_delta) {
         this.sprite?.render();
-        this.update();
+        this.update(_delta);
     }
 
-    update() {
+    update(_delta) {
 
     }
 

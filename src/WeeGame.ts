@@ -27,7 +27,7 @@ export class WeeGame {
     }
 
     private loop(time) {
-        this._elapsed = time - this._lastFrameTime;
+        this._delta = (time - this._lastFrameTime) / 1000;
         this._lastFrameTime = time;
 
         //clear canvas
@@ -35,7 +35,7 @@ export class WeeGame {
         this.ctx.fillRect(0, 0, this._width, this._height);
 
         // update current stage
-        this.stage?.loop();
+        this.stage?.loop(this._delta);
 
         // clear inputs data
         WeeInput._clear();
@@ -55,12 +55,12 @@ export class WeeGame {
     }
 
     get elapsed() {
-        return this._elapsed;
+        return this._delta;
     }
 
     private readonly _width: number;
     private readonly _height: number;
-    private _elapsed: number;
+    private _delta: number;
     private _lastFrameTime: number = 0;
     private _stage: WeeStage = null;
     ctx: CanvasRenderingContext2D = null;

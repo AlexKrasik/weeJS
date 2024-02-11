@@ -19,13 +19,13 @@ class WeeGame {
         this.loop(0);
     }
     loop(time) {
-        this._elapsed = time - this._lastFrameTime;
+        this._delta = (time - this._lastFrameTime) / 1000;
         this._lastFrameTime = time;
         //clear canvas
         this.ctx.fillStyle = "#111";
         this.ctx.fillRect(0, 0, this._width, this._height);
         // update current stage
-        this.stage?.loop();
+        this.stage?.loop(this._delta);
         // clear inputs data
         WeeInput._clear();
         requestAnimationFrame((time) => this.loop(time));
@@ -41,11 +41,11 @@ class WeeGame {
         return this._stage;
     }
     get elapsed() {
-        return this._elapsed;
+        return this._delta;
     }
     _width;
     _height;
-    _elapsed;
+    _delta;
     _lastFrameTime = 0;
     _stage = null;
     ctx = null;
@@ -58,13 +58,13 @@ class WeeStage {
     get loop() {
         return this._loop;
     }
-    _loop() {
-        this.update();
-        if (this._needReorded) {
+    _loop(_delta) {
+        this.update(_delta);
+        if (this._needReorder) {
             this._entityList = this._entityList.sort((a, b) => (a.z > b.z) ? 1 : -1);
         }
         this._entityList.forEach(e => {
-            e.loop();
+            e.loop(_delta);
         });
         if (this.game.debug) {
             const ctx = this.game.ctx;
@@ -79,7 +79,7 @@ class WeeStage {
             });
         }
     }
-    update() {
+    update(_delta) {
     }
     add(e) {
         this._entityList.push(e);
@@ -94,9 +94,9 @@ class WeeStage {
         return this._entityList;
     }
     game = null;
-    _needReorded = false;
+    _needReorder = false;
     reorderZ() {
-        this._needReorded = true;
+        this._needReorder = true;
     }
 }
 
@@ -108,11 +108,11 @@ class WeeEntity {
     get loop() {
         return this._loop;
     }
-    _loop() {
+    _loop(_delta) {
         this.sprite?.render();
-        this.update();
+        this.update(_delta);
     }
-    update() {
+    update(_delta) {
     }
     _sprite;
     set sprite(s) {
@@ -254,6 +254,8 @@ class WeeSprite {
                 ctx.rotate((this.rotation * Math.PI) / 180);
             if (this.alpha != 1)
                 ctx.globalAlpha = this.alpha;
+            if (this.scaleX != 1 || this.scaleY != 1)
+                ctx.scale(this.scaleX, this.scaleY);
             // render or fill area with frame
             if (this.fillWidth == this._fW && this.fillHeight == this._fH) {
                 ctx.drawImage(this?._fB, this.pivotX, this.pivotY);
@@ -388,6 +390,10 @@ class WeeSprite {
      * Height of rectangle to be filled with texture
      */
     fillHeight;
+    // Horizontal scale of image (1 - original)
+    scaleX = 1;
+    // Vertical scale of image (1 - original)
+    scaleY = 1;
 }
 
 class WeeInput {

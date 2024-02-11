@@ -9,13 +9,13 @@ export class WeeStage {
         return this._loop;
     }
 
-    private _loop() {
-        this.update();
+    private _loop(_delta) {
+        this.update(_delta);
         if (this._needReorder) {
             this._entityList = this._entityList.sort((a, b) => (a.z > b.z) ? 1 : -1);
         }
         this._entityList.forEach(e => {
-            e.loop();
+            e.loop(_delta);
         });
         if (this.game.debug) {
             const ctx = this.game.ctx;
@@ -31,7 +31,7 @@ export class WeeStage {
         }
     }
 
-    update() {
+    update(_delta) {
     }
 
     add(e: WeeEntity) {
