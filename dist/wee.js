@@ -70,7 +70,7 @@ class WeeStage {
             const ctx = this.game.ctx;
             this._entityList.forEach(e => {
                 //entity hitbox
-                ctx.strokeStyle = "white";
+                ctx.strokeStyle = e.hitboxColor;
                 ctx.lineWidth = 1;
                 ctx.strokeRect(Math.floor(e.x) + .5 + e.originX, Math.floor(e.y) + .5 + e.originY, e.width, e.height);
                 // entity position
@@ -194,6 +194,10 @@ class WeeEntity {
      * Entity hitbox collision group
      */
     group = '';
+    /**
+     * hitbox color for debug mode
+     */
+    hitboxColor = "#FFF";
     /**
      *  Stage this entity belongs to
      */

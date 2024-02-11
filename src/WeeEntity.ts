@@ -91,7 +91,6 @@ export class WeeEntity {
     }
 
     _z: number = 0;
-
     /**
      * hitbox X position
      */
@@ -112,6 +111,10 @@ export class WeeEntity {
      * Entity hitbox collision group
      */
     group: string = '';
+    /**
+     * hitbox color for debug mode
+     */
+    hitboxColor = "#FFF"
     /**
      *  Stage this entity belongs to
      */

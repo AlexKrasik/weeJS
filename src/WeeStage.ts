@@ -11,7 +11,7 @@ export class WeeStage {
 
     private _loop() {
         this.update();
-        if (this._needReorded) {
+        if (this._needReorder) {
             this._entityList = this._entityList.sort((a, b) => (a.z > b.z) ? 1 : -1);
         }
         this._entityList.forEach(e => {
@@ -21,7 +21,7 @@ export class WeeStage {
             const ctx = this.game.ctx;
             this._entityList.forEach(e => {
                 //entity hitbox
-                ctx.strokeStyle = "white";
+                ctx.strokeStyle = e.hitboxColor;
                 ctx.lineWidth = 1;
                 ctx.strokeRect(Math.floor(e.x) + .5 + e.originX, Math.floor(e.y) + .5 + e.originY, e.width, e.height);
                 // entity position
@@ -52,10 +52,10 @@ export class WeeStage {
 
     game: WeeGame = null;
 
-    private _needReorded: boolean = false;
+    private _needReorder: boolean = false;
 
     reorderZ() {
-        this._needReorded = true;
+        this._needReorder = true;
     }
 
 }
