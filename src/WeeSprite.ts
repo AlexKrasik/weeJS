@@ -60,6 +60,7 @@ export class WeeSprite {
 
             if (this.rotation != 0) ctx.rotate((this.rotation * Math.PI) / 180);
             if (this.alpha != 1) ctx.globalAlpha = this.alpha;
+            if (this.scaleX != 1 || this.scaleY != 1) ctx.scale(this.scaleX, this.scaleY);
             // render or fill area with frame
             if (this.fillWidth == this._fW && this.fillHeight == this._fH) {
                 ctx.drawImage(this?._fB, this.pivotX, this.pivotY);
@@ -200,5 +201,9 @@ export class WeeSprite {
      * Height of rectangle to be filled with texture
      */
     fillHeight: number;
+    // Horizontal scale of image (1 - original)
+    scaleX: number = 1;
+    // Vertical scale of image (1 - original)
+    scaleY: number = 1;
 
 }
