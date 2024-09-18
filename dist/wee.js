@@ -247,8 +247,8 @@ class WeeSprite {
         ctx.save();
         if (this._fB) {
             // renderPont
-            const rX = this.entity.x + this.x - this.pivotX;
-            const rY = this.entity.y + this.y - this.pivotY;
+            const rX = Math.floor(this.entity.x + this.x - this.pivotX);
+            const rY = Math.floor(this.entity.y + this.y - this.pivotY);
             ctx.translate(rX, rY);
             if (this.rotation != 0)
                 ctx.rotate((this.rotation * Math.PI) / 180);

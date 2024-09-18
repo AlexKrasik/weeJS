@@ -1,5 +1,4 @@
 /testbench/
 /node_modules/
-/.idea/workspace.xml
-/.idea/vcs.xml
 /package-lock.json
+/.idea

@@ -52,9 +52,9 @@ export class WeeSprite {
         ctx.save();
 
         if (this._fB) {
-            // renderPont
-            const rX = this.entity.x + this.x - this.pivotX;
-            const rY = this.entity.y + this.y - this.pivotY;
+            // renderPoint
+            const rX = Math.round(this.entity.x + this.x - this.pivotX);
+            const rY = Math.round(this.entity.y + this.y - this.pivotY);
 
             ctx.translate(rX, rY);
 
