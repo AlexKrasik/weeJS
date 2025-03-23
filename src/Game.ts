@@ -1,7 +1,7 @@
-import {WeeStage} from "./WeeStage";
-import {WeeInput} from "./Wee";
+import type {Stage} from "./Stage";
+import {Input} from "./Input";
 
-export class WeeGame {
+export class Game {
     /**
      * Set up a new game
      * @param {number} width - Base width of your game.
@@ -9,7 +9,7 @@ export class WeeGame {
      * @param {string} parentSelector - Where game canvas is will be placed in DOM.
      */
     constructor(width: number = 320, height: number = 480, parentSelector: string) {
-        WeeInput.init();
+        Input.init();
 
         // create canvas element
         const canvasEl: HTMLCanvasElement = document.createElement("canvas");
@@ -38,14 +38,14 @@ export class WeeGame {
         this.stage?.loop(this._delta);
 
         // clear inputs data
-        WeeInput._clear();
+        Input._clear();
         requestAnimationFrame((time) => this.loop(time));
     }
 
     /**
      * Currently active stage
      */
-    set stage(s: WeeStage) {
+    set stage(s: Stage) {
         this._stage = s;
         this._stage.game = this;
     }
@@ -62,7 +62,7 @@ export class WeeGame {
     private readonly _height: number;
     private _delta: number;
     private _lastFrameTime: number = 0;
-    private _stage: WeeStage = null;
+    private _stage: Stage = null;
     ctx: CanvasRenderingContext2D = null;
     debug: boolean = false;
 }

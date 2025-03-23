@@ -1,6 +1,6 @@
-import {WeeEntity} from "./WeeEntity";
+import {Entity} from "./Entity";
 
-export class WeeSprite {
+export class Sprite {
     /**
      * Class for all graphics that can be drawn by Entity.
      * @param {string} asset path to source image
@@ -12,7 +12,7 @@ export class WeeSprite {
      * @param {number} [cropHeight] height of rectangle to clip from source image. null - for whole image height
      */
     constructor(asset: string, width: number, height: number, x: number = 0, y: number = 0, cropWidth, cropHeight) {
-        const srcBitmap = WeeSprite.getAsset(asset);
+        const srcBitmap = Sprite.getAsset(asset);
 
         cropWidth = cropWidth || srcBitmap.width - x;
         cropHeight = cropHeight || srcBitmap.height - y;
@@ -149,7 +149,7 @@ export class WeeSprite {
     }
 
     // entity this sprite assigned to
-    entity: WeeEntity = null;
+    entity: Entity = null;
     // bitmapData of sprite
     private _bitmap: ImageBitmap;
     // array of frames bitmap

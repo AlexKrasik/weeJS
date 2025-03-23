@@ -1,7 +1,7 @@
-import {WeeStage} from "./WeeStage";
-import {WeeSprite} from "./WeeSprite";
+import {Stage} from "./Stage";
+import {Sprite} from "./Sprite";
 
-export class WeeEntity {
+export class Entity {
 
     constructor(x: number = 0, y: number = 0) {
         this.x = x;
@@ -21,9 +21,9 @@ export class WeeEntity {
 
     }
 
-    private _sprite: WeeSprite;
+    private _sprite: Sprite;
 
-    set sprite(s: WeeSprite) {
+    set sprite(s: Sprite) {
         this._sprite = s;
         this._sprite.entity = this;
     }
@@ -51,11 +51,11 @@ export class WeeEntity {
 
     /**
      * Check for collision with specific entity
-     * @param {WeeEntity} e entity to check collision with
+     * @param {Entity} e entity to check collision with
      * @param {number} offsetX X offset of entity hitbox. Use to predict collision
      * @param {number} offsetY Y offset of entity hitbox. Use to predict collision
      */
-    collideWith(e: WeeEntity, offsetX = 0, offsetY = 0) {
+    collideWith(e: Entity, offsetX = 0, offsetY = 0) {
         const l1 = this.x + this.originX + offsetX;
         const r1 = this.x + this.originX + offsetX + this.width;
         const t1 = this.y + this.originY + offsetY;
@@ -118,6 +118,6 @@ export class WeeEntity {
     /**
      *  Stage this entity belongs to
      */
-    stage: WeeStage;
+    stage: Stage;
 
 }

@@ -1,6 +1,7 @@
-export class WeeInput {
+export class Input {
     private static _keys = [];
 
+    // TODO add controller support
     static init() {
         addEventListener('keydown', e => {
             if (!this._keys[e.code]) this._defineKey(e.code);

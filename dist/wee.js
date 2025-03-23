@@ -1,4 +1,51 @@
-class WeeGame {
+class Input {
+    static _keys = [];
+    // TODO add controller support
+    static init() {
+        addEventListener('keydown', e => {
+            if (!this._keys[e.code])
+                this._defineKey(e.code);
+            if (!this._keys[e.code].down)
+                this._keys[e.code].pressed = true;
+            this._keys[e.code].down = true;
+            this._keys[e.code].released = false;
+        });
+        addEventListener('keyup', e => {
+            if (!this._keys[e.code])
+                this._defineKey(e.code);
+            if (this._keys[e.code].down)
+                this._keys[e.code].released = true;
+            this._keys[e.code].down = false;
+            this._keys[e.code].pressed = false;
+        });
+    }
+    static _clear() {
+        for (const code in this._keys)
+            this._keys[code].pressed = this._keys[code].released = false;
+    }
+    static _defineKey(code) {
+        this._keys[code] = {
+            pressed: false, down: false, released: false,
+        };
+    }
+    static pressed(code) {
+        if (!this._keys[code])
+            this._defineKey(code);
+        return this._keys[code].pressed;
+    }
+    static down(code) {
+        if (!this._keys[code])
+            this._defineKey(code);
+        return this._keys[code].down;
+    }
+    static released(code) {
+        if (!this._keys[code])
+            this._defineKey(code);
+        return this._keys[code].released;
+    }
+}
+
+class Game {
     /**
      * Set up a new game
      * @param {number} width - Base width of your game.
@@ -6,7 +53,7 @@ class WeeGame {
      * @param {string} parentSelector - Where game canvas is will be placed in DOM.
      */
     constructor(width = 320, height = 480, parentSelector) {
-        WeeInput.init();
+        Input.init();
         // create canvas element
         const canvasEl = document.createElement("canvas");
         canvasEl.width = this._width = width;
@@ -27,7 +74,7 @@ class WeeGame {
         // update current stage
         this.stage?.loop(this._delta);
         // clear inputs data
-        WeeInput._clear();
+        Input._clear();
         requestAnimationFrame((time) => this.loop(time));
     }
     /**
@@ -52,7 +99,7 @@ class WeeGame {
     debug = false;
 }
 
-class WeeStage {
+class Stage {
     constructor() {
     }
     get loop() {
@@ -100,7 +147,7 @@ class WeeStage {
     }
 }
 
-class WeeEntity {
+class Entity {
     constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
@@ -140,7 +187,7 @@ class WeeEntity {
     }
     /**
      * Check for collision with specific entity
-     * @param {WeeEntity} e entity to check collision with
+     * @param {Entity} e entity to check collision with
      * @param {number} offsetX X offset of entity hitbox. Use to predict collision
      * @param {number} offsetY Y offset of entity hitbox. Use to predict collision
      */
@@ -204,7 +251,7 @@ class WeeEntity {
     stage;
 }
 
-class WeeSprite {
+class Sprite {
     /**
      * Class for all graphics that can be drawn by Entity.
      * @param {string} asset path to source image
@@ -216,7 +263,7 @@ class WeeSprite {
      * @param {number} [cropHeight] height of rectangle to clip from source image. null - for whole image height
      */
     constructor(asset, width, height, x = 0, y = 0, cropWidth, cropHeight) {
-        const srcBitmap = WeeSprite.getAsset(asset);
+        const srcBitmap = Sprite.getAsset(asset);
         cropWidth = cropWidth || srcBitmap.width - x;
         cropHeight = cropHeight || srcBitmap.height - y;
         this._fW = this.fillWidth = width < cropWidth ? width || cropWidth : cropWidth;
@@ -246,9 +293,9 @@ class WeeSprite {
         const ctx = this.entity.stage.game.ctx;
         ctx.save();
         if (this._fB) {
-            // renderPont
-            const rX = Math.floor(this.entity.x + this.x - this.pivotX);
-            const rY = Math.floor(this.entity.y + this.y - this.pivotY);
+            // renderPoint
+            const rX = Math.round(this.entity.x + this.x - this.pivotX);
+            const rY = Math.round(this.entity.y + this.y - this.pivotY);
             ctx.translate(rX, rY);
             if (this.rotation != 0)
                 ctx.rotate((this.rotation * Math.PI) / 180);
@@ -396,50 +443,4 @@ class WeeSprite {
     scaleY = 1;
 }
 
-class WeeInput {
-    static _keys = [];
-    static init() {
-        addEventListener('keydown', e => {
-            if (!this._keys[e.code])
-                this._defineKey(e.code);
-            if (!this._keys[e.code].down)
-                this._keys[e.code].pressed = true;
-            this._keys[e.code].down = true;
-            this._keys[e.code].released = false;
-        });
-        addEventListener('keyup', e => {
-            if (!this._keys[e.code])
-                this._defineKey(e.code);
-            if (this._keys[e.code].down)
-                this._keys[e.code].released = true;
-            this._keys[e.code].down = false;
-            this._keys[e.code].pressed = false;
-        });
-    }
-    static _clear() {
-        for (const code in this._keys)
-            this._keys[code].pressed = this._keys[code].released = false;
-    }
-    static _defineKey(code) {
-        this._keys[code] = {
-            pressed: false, down: false, released: false,
-        };
-    }
-    static pressed(code) {
-        if (!this._keys[code])
-            this._defineKey(code);
-        return this._keys[code].pressed;
-    }
-    static down(code) {
-        if (!this._keys[code])
-            this._defineKey(code);
-        return this._keys[code].down;
-    }
-    static released(code) {
-        if (!this._keys[code])
-            this._defineKey(code);
-        return this._keys[code].released;
-    }
-}
-
-export { WeeEntity, WeeGame, WeeInput, WeeSprite, WeeStage };
+export { Entity, Game, Input, Sprite, Stage };

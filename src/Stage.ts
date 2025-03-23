@@ -1,7 +1,7 @@
-import {WeeEntity} from "./WeeEntity";
-import {WeeGame} from "./WeeGame";
+import {Entity} from "./Entity";
+import {Game} from "./Game";
 
-export class WeeStage {
+export class Stage {
     constructor() {
     }
 
@@ -34,7 +34,7 @@ export class WeeStage {
     update(_delta) {
     }
 
-    add(e: WeeEntity) {
+    add(e: Entity) {
         this._entityList.push(e);
         e.stage = this;
         return e;
@@ -44,13 +44,13 @@ export class WeeStage {
         this._entityList = this._entityList.filter(c => c != e);
     }
 
-    private _entityList: WeeEntity[] = [];
+    private _entityList: Entity[] = [];
 
     get entityList() {
         return this._entityList;
     }
 
-    game: WeeGame = null;
+    game: Game = null;
 
     private _needReorder: boolean = false;
 
